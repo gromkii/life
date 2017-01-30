@@ -17,8 +17,10 @@ type Grid struct {
 /*
   We need a method to initialize a new grid, as well as set each
   cell to false by default. Returns the Grid type we just created.
+  The go documentation says to point and reference Grid when
+  creating a NewStruct
 */
-func NewGrid(width, height int) Grid {
+func NewGrid(width, height int) *Grid {
   // Define the 2d array to being looping through.
   cell := make([][]bool, height)
 
@@ -30,7 +32,7 @@ func NewGrid(width, height int) Grid {
     }
   }
 
-  return Grid{cell:cell, width:width, height:height}
+  return &Grid{cell:cell, width:width, height:height}
 }
 
 /*
@@ -61,6 +63,6 @@ func main(){
   fmt.Println("Hello from Go!")
   newGrid := NewGrid(15, 15)
   newGrid.cell[5][5] = true
-  gridded := PrintGrid(&newGrid)
+  gridded := PrintGrid(newGrid)
   fmt.Println(gridded)
 }
