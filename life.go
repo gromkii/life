@@ -18,20 +18,49 @@ type Grid struct {
   We need a method to initialize a new grid, as well as set each
   cell to false by default. Returns the Grid type we just created.
 */
-func NewGrid(width, height) Grid {
+func NewGrid(width, height int) Grid {
   // Define the 2d array to being looping through.
   cell := make([][]bool, height)
-  for i:=0 ; i < range cell ; i++ {
+
+  // Use range to sum the number of elements in the array
+  for i := range cell {
     cell[i] = make([]bool, width)
-    for j:=0; j < range cell[i]; j++ {
+    for j:= range cell[i] {
       cell[i][j] = false
     }
-    
   }
 
   return Grid{cell:cell, width:width, height:height}
 }
 
+/*
+  This method will print the current board of our game state.
+*/
+
+func PrintGrid(grid *Grid) string {
+  printGrid := ""
+
+  for i := 0; i < grid.height; i++ {
+    line := ""
+
+    for j := 0; j < grid.height; j++ {
+      if grid.cell[i][j] == true {
+        line += "🐰"
+      } else {
+        line += " "
+      }
+    }
+
+    printGrid += line + "\n"
+  }
+
+  return printGrid
+}
+
 func main(){
   fmt.Println("Hello from Go!")
+  newGrid := NewGrid(15, 15)
+  newGrid.cell[5][5] = true
+  gridded := PrintGrid(&newGrid)
+  fmt.Println(gridded)
 }
