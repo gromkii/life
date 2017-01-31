@@ -42,7 +42,7 @@ func NewGrid(width, height int) *Grid {
   This method will print the current board of our game state.
 */
 
-func PrintGrid(grid *Grid) string {
+func (grid *Grid) PrintGrid() string {
   printGrid := ""
 
   for i := 0; i < grid.height; i++ {
@@ -103,7 +103,7 @@ func (grid *Grid) Next(x, y int) bool {
   Count the number of nearby cells, return a sum of alive neighbors, need
   to figure how to handle when the index is non-existant.
 */
-func (grid *Grid)GetAliveNeighbors(x, y int) int {
+func (grid *Grid) GetAliveNeighbors(x, y int) int {
   count := 0
 
   for i := -1; i <= 1; i++ {
@@ -122,7 +122,7 @@ func (grid *Grid)GetAliveNeighbors(x, y int) int {
   This is where the magic happens. Grid is iterated over, and
   game logic is applied to each cell to return a new grid.
 */
-func NextGeneration(grid *Grid) {
+func (grid *Grid) NextGeneration() {
   for x:=0; x < grid.width; x++ {
     for y:=0; y < grid.height; y++ {
       // Get # of alive neighbors.
@@ -155,8 +155,8 @@ func main(){
   grid := NewGrid(width, height)
   InitGrid(grid)
   for i:=0; i < cycles; i++ {
-    fmt.Println(PrintGrid(grid))
-    NextGeneration(grid)
+    fmt.Println(grid.PrintGrid())
+    grid.NextGeneration()
     time.Sleep(time.Duration(speed) * time.Millisecond)
   }
 }

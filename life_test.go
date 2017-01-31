@@ -24,7 +24,7 @@ func TestNewGrid(t *testing.T) {
 
 func TestPrintGrid(t *testing.T) {
   grid := NewGrid(3, 3)
-  print := PrintGrid(grid)
+  print := grid.PrintGrid()
 
   if (reflect.TypeOf(print)) != reflect.TypeOf("string") {
     t.Error("Expect PringGrid to return a string")
@@ -88,10 +88,10 @@ func TestNextGeneration(t *testing.T) {
   gridD.cell[0][1] = true
 
 
-  NextGeneration(gridA)
-  NextGeneration(gridB)
-  NextGeneration(gridC)
-  NextGeneration(gridD)
+  gridA.NextGeneration()
+  gridB.NextGeneration()
+  gridC.NextGeneration()
+  gridD.NextGeneration()
 
 
   if !gridA.cell[0][0] {
