@@ -10,3 +10,11 @@ go run life.go
 ```
 go test -v
 ```
+
+## Flags
+```
+-width=X //defaults to 30
+-height=X //defaults to 30
+-cycles=X //defaults to 15
+-speed=X //defaults to 500(ms)
+```

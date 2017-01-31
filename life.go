@@ -143,6 +143,7 @@ func NextGeneration(grid *Grid) {
 
 
 func main(){
+  // Allows users to set custom parameters for the game of life.
   var width, height, cycles, speed int
   flag.IntVar(&width, "width", 30, "grid width")
   flag.IntVar(&height, "height", 30, "grid height")
@@ -150,6 +151,7 @@ func main(){
   flag.IntVar(&speed, "speed", 500, "how fast it be")
   flag.Parse()
 
+  // Run the game based on user parameters/defaults.
   grid := NewGrid(width, height)
   InitGrid(grid)
   for i:=0; i < cycles; i++ {
