@@ -79,6 +79,10 @@ func InitGrid(grid *Grid) {
   }
 }
 
+func (grid *Grid) GetCell(x, y int) bool{
+  return grid.cell[y][x]
+}
+
 /*
   Check to see if the current index of grid.cell is valid, return
   true or false depending on if it is or not.
@@ -104,11 +108,12 @@ func (grid *Grid)GetAliveNeighbors(x, y int) int {
 
   for i := -1; i <= 1; i++ {
     for j := -1; j <= 1; j++ {
-      if grid.Next(x+i, y+j) && grid.cell[x+i][y+j] == true && !(i == 0 && j == 0) {
+      if !(i == 0 && j == 0) && grid.Next(x+i, y+j) && grid.GetCell(x+i, y+j) {
         count++
       }
     }
   }
+
 
   return count
 }
@@ -122,14 +127,14 @@ func NextGeneration(grid *Grid) {
     for y:=0; y < grid.height; y++ {
       // Get # of alive neighbors.
       count := grid.GetAliveNeighbors(x, y)
-      if grid.cell[x][y] && ( count == 3 || count == 2) {
-        grid.cell[x][y] = true
-      } else if grid.cell[x][y] == false && count == 3 {
-        grid.cell[x][y] = true
-      } else if grid.cell[x][y] && (count > 3 || count < 2) {
-        grid.cell[x][y] = false
+      if grid.GetCell(x,y) && ( count == 3 || count == 2) {
+        grid.cell[y][x] = true
+      } else if grid.GetCell(x,y) == false && count == 3 {
+        grid.cell[y][x] = true
+      } else if grid.GetCell(x,y) && (count > 3 || count < 2) {
+        grid.cell[y][x] = false
       } else {
-        grid.cell[x][y] = false
+        grid.cell[y][x] = false
       }
     }
   }
