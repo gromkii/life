@@ -8,5 +8,5 @@ go run life.go
 
 ## Testing
 ```
-go test life_test.go
+go test -v
 ```

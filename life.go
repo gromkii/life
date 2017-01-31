@@ -4,6 +4,7 @@ import (
   "fmt"
   "math/rand"
   "time"
+  "flag"
 )
 
 /*
@@ -47,7 +48,7 @@ func PrintGrid(grid *Grid) string {
   for i := 0; i < grid.height; i++ {
     line := ""
 
-    for j := 0; j < grid.height; j++ {
+    for j := 0; j < grid.width; j++ {
       if grid.cell[i][j] == true {
         line += "🐰 "
       } else {
@@ -103,7 +104,7 @@ func (grid *Grid)GetAliveNeighbors(x, y int) int {
 
   for i := -1; i <= 1; i++ {
     for j := -1; j <= 1; j++ {
-      if grid.Next(x+i, j+y) && grid.cell[i+x][j+y] == true && !(i == 0 && j == 0) {
+      if grid.Next(x+i, y+j) && grid.cell[x+i][y+j] == true && !(i == 0 && j == 0) {
         count++
       }
     }
@@ -112,9 +113,13 @@ func (grid *Grid)GetAliveNeighbors(x, y int) int {
   return count
 }
 
+/*
+  This is where the magic happens. Grid is iterated over, and
+  game logic is applied to each cell to return a new grid.
+*/
 func NextGeneration(grid *Grid) {
-  for x:=0; x < grid.height; x++ {
-    for y:=0; y < grid.width; y++ {
+  for x:=0; x < grid.width; x++ {
+    for y:=0; y < grid.height; y++ {
       // Get # of alive neighbors.
       count := grid.GetAliveNeighbors(x, y)
       if grid.cell[x][y] && ( count == 3 || count == 2) {
@@ -133,13 +138,18 @@ func NextGeneration(grid *Grid) {
 
 
 func main(){
-  fmt.Println("Hello from Go!")
-  newGrid := NewGrid(15, 15)
-  InitGrid(newGrid)
-  fmt.Println(PrintGrid(newGrid))
-  for i:=0; i < 50; i++ {
-    NextGeneration(newGrid)
-    fmt.Println(PrintGrid(newGrid))
-    time.Sleep(500 * time.Millisecond)
+  var width, height, cycles, speed int
+  flag.IntVar(&width, "width", 30, "grid width")
+  flag.IntVar(&height, "height", 30, "grid height")
+  flag.IntVar(&cycles, "cycles", 15, "number of cycles")
+  flag.IntVar(&speed, "speed", 500, "how fast it be")
+  flag.Parse()
+
+  grid := NewGrid(width, height)
+  InitGrid(grid)
+  for i:=0; i < cycles; i++ {
+    fmt.Println(PrintGrid(grid))
+    NextGeneration(grid)
+    time.Sleep(time.Duration(speed) * time.Millisecond)
   }
 }
