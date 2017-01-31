@@ -68,7 +68,7 @@ func PrintGrid(grid *Grid) string {
 func InitGrid(grid *Grid) {
   for i:=0; i < grid.height; i++ {
     for j:=0; j < grid.width; j++ {
-      coin := rand.Intn(2)
+      coin := rand.Intn(4)
 
       if coin == 1 {
         grid.cell[i][j] = true
@@ -90,23 +90,25 @@ func GetCell(grid *Grid, x, y int) bool {
   swapped this logic. Wraps around if index is nonexistent.
 */
 func Next(grid *Grid, x, y int) bool {
-  x += grid.width
-	x %= grid.width
-	y += grid.height
-	y %= grid.height
-	return grid.cell[y][x]
+  if x < 0 || x > grid.width {
+    return false
+  } else if y < 0 || y > grid.height {
+    return false
+  }
+
+  return true
 }
 
 /*
   Count the number of nearby cells, return a sum of alive neighbors, need
   to figure how to handle when the index is non-existant.
 */
-func GetAliveNeighbors(grid *Grid, x, y int) int {
+func GetAliveNeighbors(grid *Grid) int {
   count := 0
 
   for i:=-1; i <= 1; i++ {
     for j:=-1; j <= 1; j++ {
-      if (j != 0 || i != 0) && Next(grid, x+i, y+j) {
+      if (j != 0 || i != 0) && Next(grid, i, j) {
         count++
       }
     }
@@ -116,12 +118,12 @@ func GetAliveNeighbors(grid *Grid, x, y int) int {
 }
 
 func NextGeneration(grid *Grid) {
-  for i:=0; i < grid.height; i++ {
-    for j:=0; j < grid.width; j++ {
+  for i:=-1; i < 1; i++ {
+    for j:=-1; j < 1; j++ {
       var current = grid.cell[i][j]
-      count := GetAliveNeighbors(grid, i , j)
+      count := GetAliveNeighbors(grid)
 
-      if current && (count == 3 || count == 2) && Next(grid, i, j) {
+      if (count == 3 || count == 2) && Next(grid, i, j) {
         grid.cell[i][j] = true
       } else if !current && count == 3 && Next(grid, i, j){
         grid.cell[i][j] = true
@@ -137,7 +139,7 @@ func NextGeneration(grid *Grid) {
 
 func main(){
   fmt.Println("Hello from Go!")
-  newGrid := NewGrid(30, 30)
+  newGrid := NewGrid(15, 15)
   InitGrid(newGrid)
   fmt.Println(PrintGrid(newGrid))
   for i:=0; i < 10; i++ {
