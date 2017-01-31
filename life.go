@@ -2,6 +2,7 @@ package main
 
 import (
   "fmt"
+  "math/rand"
 )
 
 /*
@@ -47,9 +48,9 @@ func PrintGrid(grid *Grid) string {
 
     for j := 0; j < grid.height; j++ {
       if grid.cell[i][j] == true {
-        line += "🐰"
+        line += "🐰 "
       } else {
-        line += " "
+        line += "- "
       }
     }
 
@@ -59,10 +60,88 @@ func PrintGrid(grid *Grid) string {
   return printGrid
 }
 
+/*
+  We need a method to seed the initial grid. Takes a grid
+  as an argument, and populates each based on a random value
+  of 0 or 1. 1 initalizes it as alive, 0 is ded.
+*/
+func InitGrid(grid *Grid) {
+  for i:=0; i < grid.height; i++ {
+    for j:=0; j < grid.width; j++ {
+      coin := rand.Intn(2)
+
+      if coin == 1 {
+        grid.cell[i][j] = true
+      }
+    }
+  }
+}
+
+/*
+  Get cell value at a certain x y coordinate.
+*/
+func GetCell(grid *Grid, x, y int) bool {
+  return grid.cell[y][x]
+}
+
+/*
+  This method will return if the index for the next available
+  cell is valid, returning false if not, true if it is. Kinda
+  swapped this logic. Wraps around if index is nonexistent.
+*/
+func Next(grid *Grid, x, y int) bool {
+  x += grid.width
+	x %= grid.width
+	y += grid.height
+	y %= grid.height
+	return grid.cell[y][x]
+}
+
+/*
+  Count the number of nearby cells, return a sum of alive neighbors, need
+  to figure how to handle when the index is non-existant.
+*/
+func GetAliveNeighbors(grid *Grid, x, y int) int {
+  count := 0
+
+  for i:=-1; i <= 1; i++ {
+    for j:=-1; j <= 1; j++ {
+      if (j != 0 || i != 0) && Next(grid, x+i, y+j) {
+        count++
+      }
+    }
+  }
+
+  return count
+}
+
+func NextGeneration(grid *Grid) {
+  for i:=0; i < grid.height; i++ {
+    for j:=0; j < grid.width; j++ {
+      var current = grid.cell[i][j]
+      count := GetAliveNeighbors(grid, i , j)
+
+      if current && (count == 3 || count == 2) && Next(grid, i, j) {
+        grid.cell[i][j] = true
+      } else if !current && count == 3 && Next(grid, i, j){
+        grid.cell[i][j] = true
+      } else {
+        grid.cell[i][j] = false
+      }
+
+    }
+  }
+}
+
+
+
 func main(){
   fmt.Println("Hello from Go!")
-  newGrid := NewGrid(15, 15)
-  newGrid.cell[5][5] = true
-  gridded := PrintGrid(newGrid)
-  fmt.Println(gridded)
+  newGrid := NewGrid(30, 30)
+  InitGrid(newGrid)
+  fmt.Println(PrintGrid(newGrid))
+  for i:=0; i < 10; i++ {
+    NextGeneration(newGrid)
+    fmt.Println(PrintGrid(newGrid))
+  }
 }
