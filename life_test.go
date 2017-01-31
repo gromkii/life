@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+  "testing"
+  "reflect"
+)
 
 func TestTesting(t *testing.T) {
   t.Log("should establish tests")
@@ -16,6 +19,15 @@ func TestNewGrid(t *testing.T) {
         t.Fail()
       }
     }
+  }
+}
+
+func TestPrintGrid(t *testing.T) {
+  grid := NewGrid(3, 3)
+  print := PrintGrid(grid)
+
+  if (reflect.TypeOf(print)) != reflect.TypeOf("string") {
+    t.Error("Expect PringGrid to return a string")
   }
 }
 
